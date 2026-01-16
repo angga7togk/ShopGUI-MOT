@@ -140,7 +140,7 @@ public class SGCommand extends Command {
                     player.sendMessage(ShopGUI.prefix + TextFormat.GREEN + "removed " + itemHand.getName() + " in " + category + " category");
                     break;
                 default:
-                    anu.categoryShop((Player) sender, args[0], 1);
+                    anu.openCategoryShop((Player) sender, args[0]);
                     break;
             }
         }

@@ -1,13 +1,13 @@
   name: ShopGUI
   main: angga7togk.shopgui.ShopGUI
-  version: 1.0.4
+  version: 1.0.5
   api: 1.0.0
   author: Angga7Togk
   description: "ShopGUI by angga7togk"
   depend:
-    - FormAPI
+    - FormConstructor
     - FakeInventories
-    - EconomyAPI
+    - LlamaEconomy
   website: "https://7togksmp.com"
 
   permissions:

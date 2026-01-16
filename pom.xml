@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>angga7togk.shopgui</groupId>
     <artifactId>ShopGUI</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -18,42 +18,32 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>repo-lanink-cn</id>
+            <url>https://repo.lanink.cn/repository/maven-public/</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
             <groupId>cn.nukkit</groupId>
             <artifactId>Nukkit</artifactId>
             <version>MOT-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/../../project-7togknetwork-plugin/libs/Nukkit-MOT-SNAPSHOT.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.IWareQ</groupId>
-            <artifactId>FakeInventories</artifactId>
-            <version>1.1.8</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/../../project-7togknetwork-plugin/libs/FakeInventories-1.1.8.jar</systemPath>
+          <groupId>com.luminiadev.fakeinventories</groupId>
+          <artifactId>FakeInventories</artifactId>
+          <version>1.2.6</version>
         </dependency>
         <dependency>
-            <groupId>angga7togk.economyapi</groupId>
-            <artifactId>EconomyAPI</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/../../project-7togknetwork-plugin/libs/EconomyAPI-1.0-SNAPSHOT.jar</systemPath>
+          <groupId>net.lldv.llamaeconomy</groupId>
+          <artifactId>LlamaEconomy</artifactId>
+          <version>1.0.0</version>
         </dependency>
         <dependency>
-            <groupId>ru.nukkitx</groupId>
-            <artifactId>formapi</artifactId>
-            <version>2.2-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/libs/FormAPI.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>me.onebone</groupId>
-            <artifactId>economyapi</artifactId>
-            <version>2.0.2</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/libs/EconomyAPI.jar</systemPath>
+          <groupId>com.mefrreex.formconstructor</groupId>
+          <artifactId>formconstructor</artifactId>
+          <version>3.1.0</version>
         </dependency>
     </dependencies>
 </project>
