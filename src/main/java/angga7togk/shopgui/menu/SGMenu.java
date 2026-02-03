@@ -6,10 +6,13 @@ import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.TextFormat;
 import me.iwareq.fakeinventories.FakeInventory;
-import net.lldv.llamaeconomy.LlamaEconomy;
 
 import java.util.*;
 
+import com.angga7togk.core.Core;
+import com.angga7togk.core.api.economy.EconomyService;
+import com.angga7togk.core.economy.Transaction;
+import com.angga7togk.core.economy.TransactionType;
 import com.formconstructor.form.CustomForm;
 import com.formconstructor.form.ModalForm;
 import com.formconstructor.form.element.custom.Input;
@@ -42,8 +45,7 @@ public class SGMenu {
             return;
 
         inv.clearAll();
-
-        double myMoney = LlamaEconomy.getAPI().getMoney(player);
+        EconomyService economy = Core.getApi().economy();
         Map<Integer, List<String>> pageMap = new HashMap<>();
 
         int pageI = 1;
@@ -62,13 +64,17 @@ public class SGMenu {
 
         for (String itemKeys : pageMap.get(page)) {
             String[] items = itemKeys.split(":");
-            double price = plugin.shop.getDouble("shop." + category + "." + itemKeys);
+            long price = plugin.shop.getLong("shop." + category + "." + itemKeys);
+            long tax = economy.calculateTax(price);
 
             inv.addItem(Item.get(
                     Integer.parseInt(items[0]),
                     Integer.parseInt(items[1])).setLore(
-                            TextFormat.GOLD + "My Money: " + TextFormat.GREEN + myMoney,
-                            TextFormat.GOLD + "Price: " + TextFormat.GREEN + price));
+                            TextFormat.GOLD + "Price: " + TextFormat.GREEN + economy.format(price),
+                            TextFormat.GOLD + "Tax Rate: " + TextFormat.RED + economy.getTaxRate() + "%%",
+                            "",
+                            TextFormat.GOLD + "Total: " + TextFormat.BOLD + TextFormat.GREEN
+                                    + economy.format((price + tax))));
         }
 
         inv.setItem(47, Item.get(402, 14, 1).setCustomName("§bPrevious")
@@ -89,9 +95,9 @@ public class SGMenu {
                 inv.close(p, () -> mainShop(p), 15);
             } else {
                 String itemIds = item.getId() + ":" + item.getDamage();
-                double price = plugin.shop.getLong("shop." + category + "." + itemIds);
-                inv.close(p, () -> onCheckout(p, Item.get(item.getId(), item.getDamage()), price), 10);
-
+                long price = plugin.shop.getLong("shop." + category + "." + itemIds);
+                inv.close(p, () -> onCheckout(p, Item.get(item.getId(), item.getDamage()), price),
+                        10);
             }
         });
     }
@@ -188,7 +194,7 @@ public class SGMenu {
     // }, 10);
     // }
 
-    protected void onCheckout(Player player, Item item, double price) {
+    protected void onCheckout(Player player, Item item, long price) {
         CustomForm form = new CustomForm(TextFormat.BOLD + "Checkout");
         form.addElement(new Label("§ehow much do you want to buy?"));
         form.addElement("amount", new Input("Amount", "64"));
@@ -212,7 +218,8 @@ public class SGMenu {
             }
 
             Inventory inv = targetP.getInventory();
-            double myMoney = LlamaEconomy.getAPI().getMoney(player);
+            EconomyService economy = Core.getApi().economy();
+            long myMoney = economy.getBalance(targetP.getName());
             if (inv.isFull()) {
                 targetP.sendMessage(ShopGUI.prefix + "§cInventory is full!");
                 return;
@@ -229,12 +236,14 @@ public class SGMenu {
         form.send(player);
     }
 
-    protected void onBuy(Player player, Item item, double totalPrice) {
-        ModalForm form = new ModalForm(TextFormat.BOLD + "Confirmation",
-                "§l§ePurchase details\n§rItems, §a" + item.getName() + "\n§rAmount, §a" + item.getCount()
-                        + "\n§rTotalPrice, §a" + totalPrice);
+    protected void onBuy(Player player, Item item, long totalPrice) {
+        EconomyService economy = Core.getApi().economy();
+        long tax = economy.calculateTax(totalPrice);
+        ModalForm form = new ModalForm(TextFormat.BOLD + "Confirmation");
         form.setContent("§l§ePurchase details\n§rItems, §a" + item.getName() + "\n§rAmount, §a" + item.getCount()
-                + "\n§rTotalPrice, §a" + totalPrice);
+                + "\n§rPrice, §a" + economy.format(totalPrice) + "\n§rPB1, §c"
+                + economy.format(tax) + "\n§rTotal, §a"
+                + economy.format(totalPrice + tax));
         form.setPositiveButton("§l§aBuy Now");
         form.setNegativeButton("§l§cCancel");
 
@@ -245,7 +254,11 @@ public class SGMenu {
             }
             Inventory inv = targetP.getInventory();
             inv.addItem(item);
-            LlamaEconomy.getAPI().reduceMoney(targetP, totalPrice);
+            economy.purchase(player.getName(), totalPrice);
+            economy.getTransactionService()
+                    .record(new Transaction(player.getName(), totalPrice, tax, TransactionType.PURCHASE,
+                            "ShopGUI Purchase of "
+                                    + item.getCount() + " " + item.getName()));
             player.sendMessage(ShopGUI.prefix + "§aSuccessfully to buy " + item.getCount() + " " + item.getName());
         });
 

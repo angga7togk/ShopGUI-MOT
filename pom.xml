@@ -36,14 +36,14 @@
           <version>1.2.6</version>
         </dependency>
         <dependency>
-          <groupId>net.lldv.llamaeconomy</groupId>
-          <artifactId>LlamaEconomy</artifactId>
-          <version>1.0.0</version>
-        </dependency>
-        <dependency>
           <groupId>com.mefrreex.formconstructor</groupId>
           <artifactId>formconstructor</artifactId>
           <version>3.1.0</version>
+        </dependency>
+        <dependency>
+          <groupId>com.angga7togk.core</groupId>
+          <artifactId>Core</artifactId>
+          <version>1.0.1</version>
         </dependency>
     </dependencies>
 </project>
