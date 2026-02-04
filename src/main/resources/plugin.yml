@@ -7,7 +7,7 @@
   depend:
     - FormConstructor
     - FakeInventories
-    - LlamaEconomy
+    - Core
   website: "https://7togksmp.com"
 
   permissions:

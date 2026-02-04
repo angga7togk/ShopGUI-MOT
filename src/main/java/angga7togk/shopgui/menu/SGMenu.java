@@ -45,7 +45,7 @@ public class SGMenu {
             return;
 
         inv.clearAll();
-        EconomyService economy = Core.getApi().economy();
+        EconomyService economy = Core.get().getEconomy();
         Map<Integer, List<String>> pageMap = new HashMap<>();
 
         int pageI = 1;
@@ -218,7 +218,7 @@ public class SGMenu {
             }
 
             Inventory inv = targetP.getInventory();
-            EconomyService economy = Core.getApi().economy();
+            EconomyService economy = Core.get().getEconomy();
             long myMoney = economy.getBalance(targetP.getName());
             if (inv.isFull()) {
                 targetP.sendMessage(ShopGUI.prefix + "§cInventory is full!");
@@ -237,7 +237,7 @@ public class SGMenu {
     }
 
     protected void onBuy(Player player, Item item, long totalPrice) {
-        EconomyService economy = Core.getApi().economy();
+        EconomyService economy = Core.get().getEconomy();
         long tax = economy.calculateTax(totalPrice);
         ModalForm form = new ModalForm(TextFormat.BOLD + "Confirmation");
         form.setContent("§l§ePurchase details\n§rItems, §a" + item.getName() + "\n§rAmount, §a" + item.getCount()
